@@ -23,6 +23,7 @@ import com.carrentalsystem.utility.Constants.ActiveStatus;
 @Component
 public class VehicleResource {
 	
+	// ログを出力するためのロガー
 	private final Logger LOG = LoggerFactory.getLogger(VehicleResource.class);
 
 	@Autowired
@@ -31,12 +32,14 @@ public class VehicleResource {
 	@Autowired
 	private VariantService variantService;
 	
+	// 新しい車両を追加する処理
 	public ResponseEntity<CommonApiResponse> addVehicle(AddVehicleRequest request) {
 		
 		LOG.info("Request recieved for add vehicle");
 		
 		CommonApiResponse response = new CommonApiResponse();
 		
+		// リクエスト検証
 		if(request == null || request.getRegistrationNumber() == null || request.getVariantId() == null) {
 			response.setResponseMessage("bad request - invalid request");
 			response.setSuccess(false);
@@ -44,6 +47,7 @@ public class VehicleResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 		
+		// バリアントの存在チェック
 		Variant variant = this.variantService.getById(request.getVariantId());
 		
 		if(variant == null) {
@@ -53,11 +57,13 @@ public class VehicleResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 		
+		// 車両エンティティの作成
 		Vehicle vehicle = new Vehicle();
 		vehicle.setRegistrationNumber(request.getRegistrationNumber());
 		vehicle.setVariant(variant);
 		vehicle.setStatus(ActiveStatus.ACTIVE.value());
 		
+		// DBに保存
 		Vehicle addVehicle = this.vehicleService.addVehicle(vehicle);
 		
 		if(addVehicle == null) {
@@ -70,6 +76,7 @@ public class VehicleResource {
 		return new ResponseEntity<CommonApiResponse>(response, HttpStatus.OK);
 	}
 
+	// すべてのアクティブな車両を取得
 	public ResponseEntity<VehicleResponse> fetchAllVehicles() {
 
 		LOG.info("Request received for fetching all vehicles");
@@ -93,12 +100,14 @@ public class VehicleResource {
 
 	}
 
+	// バリアントIDごとに車両を取得
 	public ResponseEntity<VehicleResponse> fetchAllVehiclesByVariant(Integer variantId) {
 
 		LOG.info("Request received for fetching all vehicles by variant id");
 
 		VehicleResponse response = new VehicleResponse();
 		
+		// リクエスト検証
 		if(variantId == null) {
 			response.setResponseMessage("bad request - variant id missing");
 			response.setSuccess(false);
@@ -132,12 +141,14 @@ public class VehicleResource {
 
 	}
 
+	// 車両を更新する処理
 	public ResponseEntity<CommonApiResponse> updateVehicle(AddVehicleRequest request) {
 		
 		LOG.info("Request recieved for update vehicle");
 		
 		CommonApiResponse response = new CommonApiResponse();
 		
+		// リクエスト検証
 		if(request == null || request.getVehicleId() == null) {
 			response.setResponseMessage("bad request - invalid request");
 			response.setSuccess(false);
@@ -145,6 +156,7 @@ public class VehicleResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 		
+		// DBから車両取得
 		Vehicle vehicle = this.vehicleService.getById(request.getVehicleId());
 		
 		if(vehicle == null) {
@@ -154,6 +166,7 @@ public class VehicleResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 
+		// 更新処理
 		vehicle.setRegistrationNumber(request.getRegistrationNumber());
 		vehicle.setStatus(ActiveStatus.ACTIVE.value());
 		
@@ -169,12 +182,14 @@ public class VehicleResource {
 		return new ResponseEntity<CommonApiResponse>(response, HttpStatus.OK);
 	}
 
+	// 車両を削除する処理（ステータスをDEACTIVATEDに変更）
 	public ResponseEntity<CommonApiResponse> deleteVehicle(Integer vehicleId) {
 		
 		LOG.info("Request recieved for delete vehicle");
 		
 		CommonApiResponse response = new CommonApiResponse();
 		
+		// リクエスト検証
 		if(vehicleId == null) {
 			response.setResponseMessage("bad request - vehicle id not found");
 			response.setSuccess(false);
@@ -182,6 +197,7 @@ public class VehicleResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 		
+		// DBから車両取得
 		Vehicle vehicle = this.vehicleService.getById(vehicleId);
 		
 		if(vehicle == null) {
@@ -191,6 +207,7 @@ public class VehicleResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 
+		// ステータスを無効化に変更
 		vehicle.setStatus(ActiveStatus.DEACTIVATED.value());
 		
 		Vehicle addVehicle = this.vehicleService.updateVehicle(vehicle);

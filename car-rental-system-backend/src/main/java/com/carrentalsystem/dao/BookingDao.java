@@ -9,15 +9,15 @@ import com.carrentalsystem.entity.Booking;
 import com.carrentalsystem.entity.User;
 import com.carrentalsystem.entity.Vehicle;
 
-@Repository
+@Repository // Booking エンティティ用のリポジトリ（DB アクセスを担当）
 public interface BookingDao extends JpaRepository<Booking, Integer> {
 
-	Booking findByBookingId(String bookingId);
+	Booking findByBookingId(String bookingId); // 予約 ID で予約を検索
 
-	List<Booking> findByCustomer(User customer);
+	List<Booking> findByCustomer(User customer); // 顧客ごとの予約を取得
 
-	List<Booking> findByStatus(String status);
+	List<Booking> findByStatus(String status); // ステータスごとの予約を取得
 
-	List<Booking> findByVehicle(Vehicle vehicle);
+	List<Booking> findByVehicle(Vehicle vehicle); // 車両ごとの予約を取得
 
 }

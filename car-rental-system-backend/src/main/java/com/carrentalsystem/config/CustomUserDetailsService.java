@@ -10,20 +10,22 @@ import com.carrentalsystem.entity.User;
 import com.carrentalsystem.service.UserService;
 import com.carrentalsystem.utility.Constants.ActiveStatus;
 
+
+// Spring Security でユーザー認証に利用されるサービスクラス
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
 
 	@Autowired
-	private UserService userService;
+	private UserService userService; // ユーザー情報を取得するサービス
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-
+		// メールアドレスでユーザーを検索（有効状態のみ）
 		User user = this.userService.getUserByEmailAndStatus(email, ActiveStatus.ACTIVE.value());
 
+		// User エンティティを CustomUserDetails に変換
 		CustomUserDetails customUserDetails = new CustomUserDetails(user);
 
-		return customUserDetails;
-
+		return customUserDetails; // Spring Security に返す
 	}
 }

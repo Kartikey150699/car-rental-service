@@ -9,33 +9,34 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
-@Entity
+@Entity // 支払い情報を表すエンティティ
 public class Payment {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // 主キー自動採番
+	private int id; // 支払いID
 
-	private String bookingId;
+	private String bookingId; // 予約ID（紐付け用）
 
-	private String nameOnCard;
+	private String nameOnCard; // カード名義人
 
-	private String cardNo;
+	private String cardNo; // カード番号
 
-	private String cvv;
+	private String cvv; // セキュリティコード
 
-	private String expiryDate;
+	private String expiryDate; // 有効期限
 
-	private BigDecimal amount;
+	private BigDecimal amount; // 支払い金額
 
-	private String transactionRefId;
+	private String transactionRefId; // トランザクション参照ID
 
-	private String transactionTime;
+	private String transactionTime; // トランザクション日時
 
 	@OneToOne
-	@JoinColumn(name = "customer_id")
-	private User customer;
+	@JoinColumn(name = "customer_id") // 顧客IDと紐付け
+	private User customer; // 支払いを行った顧客
 
+	// --- Getter & Setter ---
 	public int getId() {
 		return id;
 	}

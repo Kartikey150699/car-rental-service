@@ -19,16 +19,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.carrentalsystem.filter.JwtAuthFilter;
 
-@Configuration
-@EnableWebSecurity
-@EnableMethodSecurity
+@Configuration // 設定クラスであることを示す
+@EnableWebSecurity // Spring Security を有効化
+@EnableMethodSecurity // メソッド単位のセキュリティを有効化
 public class SecurityConfig {
 
 	@Autowired
-	private JwtAuthFilter authFilter;
-
+	private JwtAuthFilter authFilter; // JWT 認証用フィルター
+	
 	@Bean
-	// authentication
+	// 認証時に使用する UserDetailsService を定義
 	public UserDetailsService userDetailsService() {
 		return new CustomUserDetailsService();
 	}
@@ -36,64 +36,39 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-		http.csrf(csrf -> csrf.disable()).cors(cors -> cors.disable())
+		http.csrf(csrf -> csrf.disable()).cors(cors -> cors.disable()) // CSRF & CORS を無効化
 
-	 // NOTE: We have not secured the any APIs here
-		// but definitely we can add api url below with the role to secure the APIs
-		
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/user/login", "/api/user/register").permitAll()
-//
-//						// this APIs are only accessible by ADMIN
-//						.requestMatchers("/api/user/admin/register", "/api/user/delete/seller", "/api/order/fetch/all",
-//								"/api/category/update", "/api/category/add", "/api/category/delete",
-//								"/api/user/fetch/role-wise", "/api/user/update/status")
-//						.hasAuthority(UserRole.ROLE_ADMIN.value())
-//
-//						// this APIs are only accessible by SELLER
-//						.requestMatchers("/api/user/fetch/seller/delivery-person", "/api/user/delete/seller/delivery-person", "/api/product/update/image",
-//								"/api/product/update/detail", "/api/product/add", "/api/product/delete",
-//								"/api/order/assign/delivery-person", "/api/order/fetch/seller-wise",
-//								"/api/product/review/seller")
-//						.hasAuthority(UserRole.ROLE_CUSTOMER.value())
-//
-//						// this APIs are only accessible by SELLER
-//						.requestMatchers("/api/order/update/delivery-status", "/api/order/fetch/delivery-wise")
-//						.hasAuthority(UserRole.ROLE_DELIVERY.value())
-//
-//						// this APIs are only accessible by SELLER
-//						.requestMatchers("/api/order/add", "/api/order/fetch/user-wise", "/api/cart/update",
-//								"/api/cart/add", "/api/cart/fetch", "/api/cart/delete", "/api/product/review/add")
-//						.hasAuthority(UserRole.ROLE_CUSTOMER.value())
-//
-//						// this APIs are only accessible by ADMIN & SELLER
-//						.requestMatchers("/api/user/fetch/role-wise", "/api/user/update/status")
-//						.hasAnyAuthority(UserRole.ROLE_ADMIN.value())
-
-						.anyRequest().permitAll())
-
+		// API の認可設定
+		.authorizeHttpRequests(auth -> auth.requestMatchers("/api/user/login", "/api/user/register").permitAll()
+				// 上記の API は認証不要でアクセス可能
+				
+				.anyRequest().permitAll()) // その他の API も現在は全て許可
+				
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+				// セッションを使わずステートレスで管理
 
 		http.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
+		// 認証処理の前に JWT フィルターを実行
 
 		return http.build();
-
 	}
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+		return new BCryptPasswordEncoder(); // パスワードを暗号化するエンコーダ
 	}
 
 	@Bean
 	public AuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-		authenticationProvider.setUserDetailsService(userDetailsService());
-		authenticationProvider.setPasswordEncoder(passwordEncoder());
+		authenticationProvider.setUserDetailsService(userDetailsService()); // ユーザー情報の取得方法を設定
+		authenticationProvider.setPasswordEncoder(passwordEncoder()); // パスワードの暗号化方式を設定
 		return authenticationProvider;
 	}
 
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+		// AuthenticationManager を Spring に提供
 		return config.getAuthenticationManager();
 	}
 

@@ -13,49 +13,49 @@ import com.carrentalsystem.entity.User;
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
-	
 	@Autowired
 	private PaymentDao paymentDao;
 	
 	@Override
 	public Payment addPayment(Payment payment) {
-		// TODO Auto-generated method stub
+		// 新しい支払いを追加
 		return paymentDao.save(payment);
 	}
 
 	@Override
 	public Payment updatePayment(Payment payment) {
-		// TODO Auto-generated method stub
+		// 支払いを更新
 		return paymentDao.save(payment);
 	}
 
 	@Override
 	public Payment getById(int paymentId) {
-		// TODO Auto-generated method stub
+		// IDで支払いを取得
 		Optional<Payment> optional = paymentDao.findById(paymentId);
 
 		if (optional.isPresent()) {
 			return optional.get();
 		}
 
+		// 見つからない場合は null を返す
 		return null;
 	}
 
 	@Override
 	public Payment getByBookingId(String bookingId) {
-		// TODO Auto-generated method stub
+		// 予約IDで支払いを取得
 		return paymentDao.findByBookingId(bookingId);
 	}
 
 	@Override
 	public Payment getByTransactionRefId(String transactionId) {
-		// TODO Auto-generated method stub
+		// 取引参照IDで支払いを取得
 		return paymentDao.findByTransactionRefId(transactionId);
 	}
 
 	@Override
 	public List<Payment> getByCustomer(User user) {
-		// TODO Auto-generated method stub
+		// 顧客ごとの支払い一覧を取得
 		return paymentDao.findByCustomer(user);
 	}
 

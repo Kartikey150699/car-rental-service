@@ -11,16 +11,16 @@ import com.carrentalsystem.resource.HelperResource;
 
 import io.swagger.v3.oas.annotations.Operation;
 
-@RestController
-@RequestMapping("api/car/rental/helper")
-@CrossOrigin(origins = "http://localhost:3000")
+@RestController // REST API コントローラー
+@RequestMapping("api/car/rental/helper") // helper 関連 API のルート
+@CrossOrigin(origins = "http://localhost:3000") // フロントエンド (React) からの通信を許可
 public class HelperController {
 	
 	@Autowired
-	private HelperResource helperResource;
+	private HelperResource helperResource; // 補助データを扱うリソース
 	
 	@GetMapping("/fetch/fuel-type")
-	@Operation(summary = "Api to fetch all fuel type")
+	@Operation(summary = "燃料タイプを全件取得する API")
 	public ResponseEntity fetchAllFuelType() {
 		return helperResource.fetchAllFuelType();
 	}

@@ -17,30 +17,32 @@ public class CompanyServiceImpl implements CompanyService {
 
 	@Override
 	public Company addCompany(Company company) {
-		// TODO Auto-generated method stub
+		// 新しい会社を追加
 		return companyDao.save(company);
 	}
 
 	@Override
 	public Company updateCompany(Company company) {
-		// TODO Auto-generated method stub
+		// 既存の会社を更新
 		return companyDao.save(company);
 	}
 
 	@Override
 	public Company getById(int companyId) {
+		// IDで会社を取得
 		Optional<Company> optional = companyDao.findById(companyId);
 
 		if (optional.isPresent()) {
 			return optional.get();
 		}
 
+		// 見つからない場合は null を返す
 		return null;
 	}
 
 	@Override
 	public List<Company> getAllCompany() {
-		// TODO Auto-generated method stub
+		// 全ての会社を取得
 		return companyDao.findAll();
 	}
 

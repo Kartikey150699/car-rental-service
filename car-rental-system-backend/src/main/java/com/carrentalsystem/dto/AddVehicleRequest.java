@@ -1,13 +1,15 @@
 package com.carrentalsystem.dto;
 
+// 車両を追加・更新するためのリクエスト DTO
 public class AddVehicleRequest {
 
-	private Integer vehicleId;
+	private Integer vehicleId; // 車両 ID
 
-	private String registrationNumber;
+	private String registrationNumber; // 登録番号（ナンバープレート）
 
-	private Integer variantId;
+	private Integer variantId; // バリアント ID
 
+	// --- Getter & Setter ---
 	public Integer getVehicleId() {
 		return vehicleId;
 	}

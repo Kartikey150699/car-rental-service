@@ -5,19 +5,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-@Entity
+@Entity // 住所情報を保持するエンティティ
 public class Address {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // 主キー自動採番
+	private int id; // 住所 ID
 
-	private String street;
+	private String street; // 番地・通り
 
-	private String city;
+	private String city; // 市区町村
 
-	private int pincode;
+	private int pincode; // 郵便番号
 
+	// --- Getter & Setter ---
 	public int getId() {
 		return id;
 	}

@@ -17,28 +17,28 @@ import com.carrentalsystem.resource.CompanyResource;
 
 import io.swagger.v3.oas.annotations.Operation;
 
-@RestController
-@RequestMapping("api/company")
-@CrossOrigin(origins = "http://localhost:3000")
+@RestController // REST API コントローラー
+@RequestMapping("api/company") // company 関連の API のルート
+@CrossOrigin(origins = "http://localhost:3000") // フロントエンド (React) からの通信を許可
 public class CompanyController {
 
 	@Autowired
-	private CompanyResource companyResource;
+	private CompanyResource companyResource; // 会社情報を扱うリソースクラス
 
 	@PostMapping("/add")
-	@Operation(summary = "Api to add company")
+	@Operation(summary = "会社を追加する API")
 	public ResponseEntity<CommonApiResponse> addCompany(@RequestBody Company company) {
 		return companyResource.addCompany(company);
 	}
 
 	@GetMapping("/fetch/all")
-	@Operation(summary = "Api to fetch all company")
+	@Operation(summary = "全ての会社情報を取得する API")
 	public ResponseEntity<CompanyResponse> fetchAllCompany() {
 		return companyResource.fetchAllCompany();
 	}
 
 	@PutMapping("/udpate")
-	@Operation(summary = "Api to update company")
+	@Operation(summary = "会社情報を更新する API")
 	public ResponseEntity<CommonApiResponse> updateCompany(@RequestBody Company company) {
 		return companyResource.updateCompany(company);
 	}

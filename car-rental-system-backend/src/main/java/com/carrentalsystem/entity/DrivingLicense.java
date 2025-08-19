@@ -5,19 +5,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-@Entity
+@Entity // 運転免許証情報を表すエンティティ
 public class DrivingLicense {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // 主キー自動採番
+	private int id; // 免許証 ID
 
-	private String licenseNumber;
+	private String licenseNumber; // 免許証番号
 
-	private String expirationDate;
+	private String expirationDate; // 有効期限
 
-	private String licensePic;
+	private String licensePic; // 免許証画像ファイル名
 
+	// --- Getter & Setter ---
 	public int getId() {
 		return id;
 	}

@@ -7,21 +7,22 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
-@Entity
+@Entity // 車両情報を表すエンティティ
 public class Vehicle {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // 主キー自動採番
+	private int id; // 車両ID
 
-	private String registrationNumber;
+	private String registrationNumber; // 登録番号（ナンバープレート）
 
 	@ManyToOne
-	@JoinColumn(name = "variant_id")
-	private Variant variant;
+	@JoinColumn(name = "variant_id") // 複数の車両が同じバリエーションに属する
+	private Variant variant; // 車両のバリエーション（モデル情報）
 
-	private String status;
+	private String status; // 状態（例：利用可能、整備中、貸出中）
 
+	// --- Getter & Setter ---
 	public int getId() {
 		return id;
 	}

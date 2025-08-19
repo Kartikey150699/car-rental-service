@@ -32,6 +32,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class VariantResource {
 
+	// ログを出力するためのロガー
 	private final Logger LOG = LoggerFactory.getLogger(VariantResource.class);
 
 	@Autowired
@@ -43,12 +44,14 @@ public class VariantResource {
 	@Autowired
 	private StorageService storageService;
 
+	// 新しいバリアントを追加する処理
 	public ResponseEntity<CommonApiResponse> addVariant(VariantAddRequest request) {
 
 		LOG.info("Request received for adding variant");
 
 		CommonApiResponse response = new CommonApiResponse();
 
+		// リクエストの検証
 		if (request == null || !VariantAddRequest.validate(request)) {
 			response.setResponseMessage("bad request - invalid request");
 			response.setSuccess(false);
@@ -56,8 +59,10 @@ public class VariantResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 
+		// DTO からエンティティに変換
 		Variant variant = VariantAddRequest.toVariantEntity(request);
 
+		// 会社の存在チェック
 		Company company = this.companyService.getById(request.getCompanyId());
 
 		if (company == null) {
@@ -69,12 +74,14 @@ public class VariantResource {
 
 		variant.setCompany(company);
 
+		// 画像をストレージに保存
 		String variantImageName = storageService.storeVariantImage(request.getImage());
 
 		variant.setImage(variantImageName);
 		variant.setAC(request.isAC());
 		variant.setStatus(ActiveStatus.ACTIVE.value());
 
+		// バリアントをDBに保存
 		Variant addedVariant = this.variantService.addVariant(variant);
 
 		if (addedVariant == null) {
@@ -87,6 +94,7 @@ public class VariantResource {
 		return new ResponseEntity<CommonApiResponse>(response, HttpStatus.OK);
 	}
 
+	// 全てのアクティブなバリアントを取得
 	public ResponseEntity<VariantResponse> fetchAllVariant() {
 
 		LOG.info("Request received for fetching all variant");
@@ -109,6 +117,7 @@ public class VariantResource {
 		return new ResponseEntity<VariantResponse>(response, HttpStatus.OK);
 	}
 
+	// IDによってバリアントを取得
 	public ResponseEntity<VariantResponse> fetchVariantByID(int variantId) {
 
 		LOG.info("Request received for fetching variant by id");
@@ -138,6 +147,7 @@ public class VariantResource {
 		return new ResponseEntity<VariantResponse>(response, HttpStatus.OK);
 	}
 
+	// 会社ごとのバリアントを取得
 	public ResponseEntity<VariantResponse> fetchVariantsByCompany(int companyId) {
 
 		LOG.info("Request received for fetching all variant");
@@ -169,6 +179,7 @@ public class VariantResource {
 		return new ResponseEntity<VariantResponse>(response, HttpStatus.OK);
 	}
 
+	// 名前でバリアントを検索
 	public ResponseEntity<VariantResponse> searchVariants(String variantName) {
 
 		LOG.info("Request received for searching the variants by name");
@@ -198,6 +209,7 @@ public class VariantResource {
 		return new ResponseEntity<VariantResponse>(response, HttpStatus.OK);
 	}
 
+	// バリアント画像を取得しレスポンスに書き込む処理
 	public void fetchVariantImage(String variantImage, HttpServletResponse resp) {
 		System.out.println("request came for fetching variant pic");
 		System.out.println("Loading file: " + variantImage);
@@ -214,12 +226,14 @@ public class VariantResource {
 		System.out.println("response sent!");
 	}
 
+	// バリアントを更新する処理
 	public ResponseEntity<CommonApiResponse> updateVariant(VariantAddRequest request) {
 
 		LOG.info("Request received for updating the variant");
 
 		CommonApiResponse response = new CommonApiResponse();
 
+		// 入力検証
 		if (request == null || request.getId() == null || !VariantAddRequest.validate(request)) {
 			response.setResponseMessage("bad request - invalid request");
 			response.setSuccess(false);
@@ -227,9 +241,11 @@ public class VariantResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 
+		// DTO からエンティティに変換
 		Variant variant = VariantAddRequest.toVariantEntity(request);
 		variant.setId(request.getId());
 
+		// 会社の存在チェック
 		Company company = this.companyService.getById(request.getCompanyId());
 
 		if (company == null) {
@@ -241,12 +257,14 @@ public class VariantResource {
 
 		variant.setCompany(company);
 
+		// 画像をストレージに保存
 		String variantImageName = storageService.storeVariantImage(request.getImage());
 
 		variant.setImage(variantImageName);
 		variant.setAC(request.isAC());
 		variant.setStatus(ActiveStatus.ACTIVE.value());
 
+		// DB更新処理
 		Variant addedVariant = this.variantService.updateVariant(variant);
 
 		if (addedVariant == null) {
@@ -259,6 +277,7 @@ public class VariantResource {
 		return new ResponseEntity<CommonApiResponse>(response, HttpStatus.OK);
 	}
 
+	// バリアントを削除（ステータスを非アクティブに変更）
 	public ResponseEntity<CommonApiResponse> deleteVariant(int variantId) {
 
 		LOG.info("Request received for delete the variant");
@@ -272,6 +291,7 @@ public class VariantResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 
+		// バリアント取得
 		Variant variant = this.variantService.getById(variantId);
 
 		if (variant == null) {
@@ -281,6 +301,7 @@ public class VariantResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 		
+		// ステータスをDEACTIVATEDに変更
 		variant.setStatus(ActiveStatus.DEACTIVATED.value());
 		
 		Variant addedVariant = this.variantService.updateVariant(variant);

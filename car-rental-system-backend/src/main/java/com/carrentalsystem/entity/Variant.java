@@ -9,37 +9,38 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
-@Entity
+@Entity // 車両バリエーションを表すエンティティ
 public class Variant {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // 主キー自動採番
+	private int id; // バリエーションID
 
-	private String name;
+	private String name; // 車両名（例：Corolla、Civicなど）
 
-	private String description;
+	private String description; // 説明文
 
-	private String modelNumber;
+	private String modelNumber; // モデル番号
 
-	private int year;
+	private int year; // 製造年
 
-	private String fuelType;
+	private String fuelType; // 燃料タイプ（例：ガソリン、ディーゼル、EV）
 
-	private boolean isAC;
+	private boolean isAC; // エアコン有無
 
-	private int seatingCapacity;
+	private int seatingCapacity; // 座席数
 
-	private BigDecimal pricePerDay;
+	private BigDecimal pricePerDay; // 1日あたりのレンタル料金
 
 	@ManyToOne
-	@JoinColumn(name = "company_id")
-	private Company company;
+	@JoinColumn(name = "company_id") // 各バリエーションは特定の会社に所属
+	private Company company; // メーカー会社情報
 
-	private String status;
+	private String status; // バリエーションの状態（例：利用可能、停止中）
 
-	private String image;
+	private String image; // 車両画像のパスまたはURL
 
+	// --- Getter & Setter ---
 	public int getId() {
 		return id;
 	}

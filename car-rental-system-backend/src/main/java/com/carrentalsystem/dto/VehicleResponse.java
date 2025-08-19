@@ -5,10 +5,12 @@ import java.util.List;
 
 import com.carrentalsystem.entity.Vehicle;
 
+// 車両情報のレスポンス DTO（共通レスポンスを継承）
 public class VehicleResponse extends CommonApiResponse {
 
-	private List<Vehicle> vehicles = new ArrayList<>();
+	private List<Vehicle> vehicles = new ArrayList<>(); // 車両一覧
 
+	// --- Getter & Setter ---
 	public List<Vehicle> getVehicles() {
 		return vehicles;
 	}

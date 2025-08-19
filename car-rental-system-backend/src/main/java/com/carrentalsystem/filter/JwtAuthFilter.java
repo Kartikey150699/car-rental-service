@@ -22,29 +22,46 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtUtils jwtUtils;
+    private JwtUtils jwtUtils;  
+    // JWTユーティリティクラス（トークンの検証やユーザー名抽出に使用）
 
     @Autowired
-    private CustomUserDetailsService userDetailsService;
+    private CustomUserDetailsService userDetailsService;  
+    // ユーザー詳細情報を取得するサービス
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authHeader = request.getHeader("Authorization");
+        String authHeader = request.getHeader("Authorization");  
+        // リクエストヘッダーからAuthorizationを取得
+
         String token = null;
         String username = null;
+
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7); 
-            username = jwtUtils.extractUsername(token);  // username in token is actually a email
+            token = authHeader.substring(7);  
+            // "Bearer " を除去してトークン本体を取得
+
+            username = jwtUtils.extractUsername(token);  
+            // トークンからユーザー名（ここではメールアドレス）を抽出
         }
 
+        // 認証がまだ行われていない場合のみ処理
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            if (jwtUtils.validateToken(token, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);  
+            // DBなどからユーザー情報を取得
+
+            if (jwtUtils.validateToken(token, userDetails)) {  
+                // トークンが有効な場合
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+
+                SecurityContextHolder.getContext().setAuthentication(authToken);  
+                // Spring Securityに認証情報を設定
             }
         }
+
+        // 次のフィルタに処理を渡す
         filterChain.doFilter(request, response);
     }
     

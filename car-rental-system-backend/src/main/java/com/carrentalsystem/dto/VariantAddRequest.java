@@ -7,30 +7,32 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.carrentalsystem.entity.Variant;
 
+// 車両バリアントを追加・更新するためのリクエスト DTO
 public class VariantAddRequest {
 
-	private Integer id;
+	private Integer id; // バリアント ID
 
-	private String name;
+	private String name; // バリアント名
 
-	private String description;
+	private String description; // 説明
 
-	private String modelNumber;
+	private String modelNumber; // モデル番号
 
-	private int year;
+	private int year; // 年式
 
-	private String fuelType;
+	private String fuelType; // 燃料タイプ
 
-	private boolean isAC;
+	private boolean isAC; // エアコン有無
 
-	private int seatingCapacity;
+	private int seatingCapacity; // 座席数
 
-	private BigDecimal pricePerDay;
+	private BigDecimal pricePerDay; // 1日あたりのレンタル料金
 
-	private int companyId;
+	private int companyId; // 所属会社 ID
 
-	private MultipartFile image;
+	private MultipartFile image; // バリアント画像ファイル
 
+	// --- Getter & Setter ---
 	public String getName() {
 		return name;
 	}
@@ -119,12 +121,14 @@ public class VariantAddRequest {
 		this.id = id;
 	}
 
+	// DTO を Variant エンティティに変換するユーティリティメソッド
 	public static Variant toVariantEntity(VariantAddRequest variantAddRequest) {
 		Variant variant = new Variant();
 		BeanUtils.copyProperties(variantAddRequest, variant, "image", "id");
 		return variant;
 	}
 
+	// 必須フィールドを確認するバリデーション
 	public static boolean validate(VariantAddRequest request) {
 
 		if (request.getCompanyId() == 0 || request.getFuelType() == null || request.getImage() == null

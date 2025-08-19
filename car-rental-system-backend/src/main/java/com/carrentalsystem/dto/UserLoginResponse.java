@@ -1,11 +1,13 @@
 package com.carrentalsystem.dto;
 
+// ログイン成功時のレスポンス DTO（共通レスポンスを継承）
 public class UserLoginResponse extends CommonApiResponse {
 
-	private UserDto user;
+	private UserDto user; // ログインしたユーザー情報
 
-	private String jwtToken;
+	private String jwtToken; // 認証用 JWT トークン
 
+	// --- Getter & Setter ---
 	public UserDto getUser() {
 		return user;
 	}

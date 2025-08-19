@@ -4,26 +4,28 @@ import org.springframework.beans.BeanUtils;
 
 import com.carrentalsystem.entity.User;
 
+// ユーザー登録用のリクエスト DTO
 public class RegisterUserRequestDto {
 
-	private String firstName;
+	private String firstName; // 名
 
-	private String lastName;
+	private String lastName; // 姓
 
-	private String emailId;
+	private String emailId; // メールアドレス
 
-	private String password;
+	private String password; // パスワード
 
-	private String phoneNo;
+	private String phoneNo; // 電話番号
 
-	private String role;
+	private String role; // ユーザーの役割（Admin, Customer, Seller など）
 
-	private String street;
+	private String street; // 住所（番地）
 
-	private String city;
+	private String city; // 住所（市区町村）
 
-	private int pincode;
+	private int pincode; // 郵便番号
 
+	// --- Getter & Setter ---
 	public String getFirstName() {
 		return firstName;
 	}
@@ -96,6 +98,7 @@ public class RegisterUserRequestDto {
 		this.pincode = pincode;
 	}
 
+	// DTO を User エンティティに変換するユーティリティメソッド
 	public static User toUserEntity(RegisterUserRequestDto registerUserRequestDto) {
 		User user = new User();
 		BeanUtils.copyProperties(registerUserRequestDto, user);

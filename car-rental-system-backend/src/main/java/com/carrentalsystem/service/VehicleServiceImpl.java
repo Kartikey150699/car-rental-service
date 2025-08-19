@@ -13,24 +13,25 @@ import com.carrentalsystem.entity.Vehicle;
 @Service
 public class VehicleServiceImpl implements VehicleService {
 
+	// Vehicle データアクセスオブジェクトを注入
 	@Autowired
 	private VehicleDao vehicleDao;
 	
 	@Override
 	public Vehicle addVehicle(Vehicle vehicle) {
-		// TODO Auto-generated method stub
+		// 新しい車両を保存
 		return vehicleDao.save(vehicle);
 	}
 
 	@Override
 	public Vehicle updateVehicle(Vehicle vehicle) {
-		// TODO Auto-generated method stub
+		// 車両情報を更新
 		return vehicleDao.save(vehicle);
 	}
 
 	@Override
 	public Vehicle getById(int vehicleId) {
-		// TODO Auto-generated method stub
+		// IDで車両を検索（存在しない場合は null を返す）
 		Optional<Vehicle> optional = this.vehicleDao.findById(vehicleId);
 
 		if (optional.isPresent()) {
@@ -42,13 +43,13 @@ public class VehicleServiceImpl implements VehicleService {
 
 	@Override
 	public List<Vehicle> getByVariantAndStatus(Variant variant, String status) {
-		// TODO Auto-generated method stub
+		// バリアントとステータスで車両を検索
 		return vehicleDao.findByVariantAndStatus(variant, status);
 	}
 
 	@Override
 	public List<Vehicle> getByStatus(String status) {
-		// TODO Auto-generated method stub
+		// ステータスで車両を検索
 		return vehicleDao.findByStatus(status);
 	}
 

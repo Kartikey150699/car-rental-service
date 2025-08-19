@@ -6,26 +6,28 @@ import com.carrentalsystem.entity.Address;
 import com.carrentalsystem.entity.DrivingLicense;
 import com.carrentalsystem.entity.User;
 
+// ユーザー情報をレスポンス用にまとめた DTO
 public class UserDto {
 
-	private int id;
+	private int id; // ユーザー ID
 
-	private String firstName;
+	private String firstName; // 名
 
-	private String lastName;
+	private String lastName; // 姓
 
-	private String emailId;
+	private String emailId; // メールアドレス
 
-	private String phoneNo;
+	private String phoneNo; // 電話番号
 
-	private String role;
+	private String role; // ユーザーの役割（Admin, Customer, Seller など）
 
-	private Address address;
+	private Address address; // ユーザー住所情報
 
-	private String status;
+	private String status; // ステータス（Active / Inactive など）
 
-	private DrivingLicense license;
+	private DrivingLicense license; // 運転免許証情報
 
+	// --- Getter & Setter ---
 	public int getId() {
 		return id;
 	}
@@ -98,6 +100,7 @@ public class UserDto {
 		this.license = license;
 	}
 
+	// User エンティティを DTO に変換するユーティリティメソッド
 	public static UserDto toUserDtoEntity(User user) {
 		UserDto userDto = new UserDto();
 		BeanUtils.copyProperties(user, userDto);

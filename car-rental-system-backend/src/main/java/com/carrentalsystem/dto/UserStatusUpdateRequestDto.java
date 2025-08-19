@@ -1,11 +1,13 @@
 package com.carrentalsystem.dto;
 
+// ユーザーステータス更新用リクエスト DTO
 public class UserStatusUpdateRequestDto {
 
-	private int userId;
+	private int userId; // ユーザー ID
 
-	private String status;
+	private String status; // 更新後のステータス（ACTIVE / INACTIVE など）
 
+	// --- Getter & Setter ---
 	public int getUserId() {
 		return userId;
 	}

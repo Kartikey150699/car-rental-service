@@ -1,17 +1,19 @@
 package com.carrentalsystem.dto;
 
+// 顧客の予約支払い情報を送信するためのリクエスト DTO
 public class CustomerBookingPaymentRequest {
 
-	private Integer bookingId;
+	private Integer bookingId; // 予約 ID
 
-	private String nameOnCard;
+	private String nameOnCard; // カード名義人
 
-	private String cardNo;
+	private String cardNo; // カード番号
 
-	private String cvv;
+	private String cvv; // セキュリティコード (CVV)
 
-	private String expiryDate;
+	private String expiryDate; // 有効期限
 
+	// --- Getter & Setter ---
 	public Integer getBookingId() {
 		return bookingId;
 	}

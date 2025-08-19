@@ -53,12 +53,14 @@ public class BookingResource {
 	@Autowired
 	private PaymentService paymentService;
 
+	// 新しい予約を追加する処理
 	public ResponseEntity<CommonApiResponse> addBooking(AddBookingRequest request) {
 
 		LOG.info("Request received for adding rent book");
 
 		CommonApiResponse response = new CommonApiResponse();
 
+		// リクエストのバリデーションチェック
 		if (request == null || request.getStartDate() == null || request.getEndDate() == null
 				|| request.getCustomerId() == null || request.getVehicleId() == null) {
 			response.setResponseMessage("bad request - invalid request");
@@ -67,6 +69,7 @@ public class BookingResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 
+		// バリアントの取得
 		Variant variant = this.variantService.getById(request.getVehicleId());
 
 		if (variant == null) {
@@ -76,6 +79,7 @@ public class BookingResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 
+		// 顧客情報の取得
 		User customer = this.userService.getUserById(request.getCustomerId());
 
 		if (customer == null) {
@@ -85,18 +89,21 @@ public class BookingResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 
+		// 予約IDと予約時間を生成
 		String bookingId = Helper.generateBookingId();
 		String bookingTime = String
 				.valueOf(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
 
-		// Convert the strings to LocalDate objects
+		// 文字列を LocalDate に変換
 		LocalDate startDate = LocalDate.parse(request.getStartDate());
 		LocalDate endDate = LocalDate.parse(request.getEndDate());
 
+		// 開始日と終了日を含めた日数を計算
 		Integer totalDay = getTotalDaysInclusive(startDate, endDate);
 
 		BigDecimal perDayRentPrice = variant.getPricePerDay();
 
+		// Booking エンティティの作成
 		Booking booking = new Booking();
 		booking.setBookingId(bookingId);
 		booking.setBookingTime(bookingTime);
@@ -108,6 +115,7 @@ public class BookingResource {
 		booking.setTotalPrice(perDayRentPrice.multiply(BigDecimal.valueOf(totalDay)));
 		booking.setStatus(BookingStatus.PENDING.value());
 
+		// DB に保存
 		Booking addedBooking = this.bookingService.addBooking(booking);
 
 		if (addedBooking == null) {
@@ -120,12 +128,12 @@ public class BookingResource {
 		return new ResponseEntity<CommonApiResponse>(response, HttpStatus.OK);
 	}
 
+	// 開始日と終了日を含めて日数を計算するヘルパーメソッド
 	private static int getTotalDaysInclusive(LocalDate startDate, LocalDate endDate) {
-		// Calculate the number of days between the start and end dates, including both
-		// start and end dates
 		return (int) ChronoUnit.DAYS.between(startDate, endDate) + 1;
 	}
 
+	// 全ての予約を取得する処理
 	public ResponseEntity<BookingResponse> fetchAllBookings() {
 
 		LOG.info("Request received for fetching all the bookings");
@@ -148,6 +156,7 @@ public class BookingResource {
 		return new ResponseEntity<BookingResponse>(response, HttpStatus.OK);
 	}
 
+	// 特定の顧客の予約を取得する処理
 	public ResponseEntity<BookingResponse> fetchAllCustomerBookings(Integer customerId) {
 
 		LOG.info("Request received for fetching customer bookings");
@@ -161,6 +170,7 @@ public class BookingResource {
 			return new ResponseEntity<BookingResponse>(response, HttpStatus.OK);
 		}
 
+		// 顧客を取得
 		User customer = this.userService.getUserById(customerId);
 
 		if (customer == null) {
@@ -170,6 +180,7 @@ public class BookingResource {
 			return new ResponseEntity<BookingResponse>(response, HttpStatus.OK);
 		}
 
+		// 顧客に紐づく予約を取得
 		List<Booking> bookings = this.bookingService.getByCustomer(customer);
 
 		if (bookings == null) {
@@ -186,12 +197,14 @@ public class BookingResource {
 		return new ResponseEntity<BookingResponse>(response, HttpStatus.OK);
 	}
 
+	// 予約のステータス更新と車両の割り当てを行う処理
 	public ResponseEntity<CommonApiResponse> updateStatusAndAssignVehicle(AddBookingRequest request) {
 
 		LOG.info("Request received for updating booking status and assign vehicle");
 
 		CommonApiResponse response = new CommonApiResponse();
 
+		// バリデーション
 		if (request == null || request.getBookingId() == null || request.getStatus() == null) {
 			response.setResponseMessage("bad request - invalid request");
 			response.setSuccess(false);
@@ -199,6 +212,7 @@ public class BookingResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 
+		// 承認には車両割り当てが必須
 		if (request.getStatus().equals(BookingStatus.APPROVED.value()) && request.getVehicleId() == null) {
 			response.setResponseMessage("Please assign Vehicle for the Booking!!!");
 			response.setSuccess(false);
@@ -206,6 +220,7 @@ public class BookingResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 
+		// 予約を取得
 		Booking booking = this.bookingService.getById(request.getBookingId());
 
 		if (booking == null) {
@@ -215,15 +230,18 @@ public class BookingResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 
+		// ステータス更新
 		if (request.getStatus().equals(BookingStatus.REJECTED.value())) {
 			booking.setStatus(request.getStatus());
 		} else if (request.getStatus().equals(BookingStatus.APPROVED.value())) {
 			booking.setStatus(request.getStatus());
 
+			// 車両を割り当て
 			Vehicle vehicle = this.vehicleService.getById(request.getVehicleId());
 			booking.setVehicle(vehicle);
 		}
 
+		// DB更新
 		Booking addedBooking = this.bookingService.updateBooking(booking);
 
 		if (addedBooking == null) {
@@ -236,12 +254,14 @@ public class BookingResource {
 		return new ResponseEntity<CommonApiResponse>(response, HttpStatus.OK);
 	}
 
+	// 顧客による支払い処理
 	public ResponseEntity<CommonApiResponse> customerPaymentForBooking(CustomerBookingPaymentRequest request) {
 
 		LOG.info("Request received for updating booking status and assign vehicle");
 
 		CommonApiResponse response = new CommonApiResponse();
 
+		// 入力チェック
 		if (request == null || request.getBookingId() == null || request.getCardNo() == null || request.getCvv() == null
 				|| request.getExpiryDate() == null || request.getNameOnCard() == null) {
 			response.setResponseMessage("bad request - invalid request");
@@ -250,6 +270,7 @@ public class BookingResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 
+		// 予約の取得
 		Booking booking = this.bookingService.getById(request.getBookingId());
 
 		if (booking == null) {
@@ -259,8 +280,10 @@ public class BookingResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 
+		// 支払い後のステータス更新
 		booking.setStatus(BookingStatus.PAID_AND_CONFIRMED.value());
 
+		// 支払い情報を作成
 		Payment payment = new Payment();
 		payment.setAmount(booking.getTotalPrice());
 		payment.setBookingId(booking.getBookingId());
@@ -273,12 +296,14 @@ public class BookingResource {
 		payment.setTransactionTime(
 				String.valueOf(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()));
 
+		// 支払い保存
 		Payment addedPayment = this.paymentService.addPayment(payment);
 
 		if (addedPayment == null) {
 			throw new BookingSaveFailedException("Payment Failed for Booking!!!");
 		}
 
+		// 予約に支払い情報を紐づけ
 		booking.setPayment(addedPayment);
 
 		Booking addedBooking = this.bookingService.updateBooking(booking);
@@ -293,12 +318,14 @@ public class BookingResource {
 		return new ResponseEntity<CommonApiResponse>(response, HttpStatus.OK);
 	}
 
+	// 予約キャンセル処理
 	public ResponseEntity<CommonApiResponse> cancelbooking(AddBookingRequest request) {
 
 		LOG.info("Request received for cancelling the booking");
 
 		CommonApiResponse response = new CommonApiResponse();
 
+		// バリデーション
 		if (request == null || request.getBookingId() == null || request.getStatus() == null) {
 			response.setResponseMessage("bad request - invalid request");
 			response.setSuccess(false);
@@ -306,6 +333,7 @@ public class BookingResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 
+		// 予約取得
 		Booking booking = this.bookingService.getById(request.getBookingId());
 
 		if (booking == null) {
@@ -315,6 +343,7 @@ public class BookingResource {
 			return new ResponseEntity<CommonApiResponse>(response, HttpStatus.BAD_REQUEST);
 		}
 
+		// ステータスをキャンセルに変更
 		booking.setStatus(ActiveStatus.DEACTIVATED.value());
 
 		Booking addedBooking = this.bookingService.updateBooking(booking);

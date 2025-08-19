@@ -19,56 +19,56 @@ public class BookingServiceImpl implements BookingService {
 	
 	@Override
 	public Booking addBooking(Booking booking) {
-		// TODO Auto-generated method stub
+		// 新しい予約を追加
 		return bookingDao.save(booking);
 	}
 
 	@Override
 	public Booking updateBooking(Booking booking) {
-		// TODO Auto-generated method stub
+		// 既存の予約を更新
 		return bookingDao.save(booking);
 	}
 
 	@Override
 	public Booking getById(int bookingId) {
-		// TODO Auto-generated method stub
-		
+		// IDで予約を取得
 		Optional<Booking> optional = bookingDao.findById(bookingId);
 		
 		if(optional.isPresent()) {
 			return optional.get();
 		}
 		
+		// 見つからない場合は null を返す
 		return null;
 	}
 
 	@Override
 	public Booking getByBookingId(String bookingId) {
-		// TODO Auto-generated method stub
+		// 予約番号で予約を取得
 		return bookingDao.findByBookingId(bookingId);
 	}
 
 	@Override
 	public List<Booking> getByCustomer(User customer) {
-		// TODO Auto-generated method stub
+		// 顧客ごとの予約を取得
 		return bookingDao.findByCustomer(customer);
 	}
 
 	@Override
 	public List<Booking> getByStatus(String status) {
-		// TODO Auto-generated method stub
+		// ステータスごとの予約を取得
 		return bookingDao.findByStatus(status);
 	}
 
 	@Override
 	public List<Booking> getByVehicle(Vehicle vehicle) {
-		// TODO Auto-generated method stub
+		// 車両ごとの予約を取得
 		return bookingDao.findByVehicle(vehicle);
 	}
 
 	@Override
 	public List<Booking> getAllBookings() {
-		// TODO Auto-generated method stub
+		// すべての予約を取得
 		return bookingDao.findAll();
 	}
 

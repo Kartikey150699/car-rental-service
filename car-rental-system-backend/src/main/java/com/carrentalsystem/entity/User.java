@@ -10,36 +10,37 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
-@Entity
+@Entity // ユーザー情報を表すエンティティ
 public class User {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // 主キー自動採番
+	private int id; // ユーザーID
 
-	private String firstName;
+	private String firstName; // 名
 
-	private String lastName;
+	private String lastName; // 姓
 
-	private String emailId;
+	private String emailId; // メールアドレス
 
-	@JsonIgnore
-	private String password;
+	@JsonIgnore // セキュリティのためパスワードをJSONに含めない
+	private String password; // パスワード
 
-	private String phoneNo;
+	private String phoneNo; // 電話番号
 
-	private String role;
+	private String role; // ユーザーの役割（例：管理者、顧客）
 
 	@ManyToOne
-	@JoinColumn(name = "address_id")
-	private Address address;
+	@JoinColumn(name = "address_id") // 複数のユーザーが同じ住所を持つ可能性あり
+	private Address address; // 住所情報
 
 	@OneToOne
-	@JoinColumn(name = "license_id")
-	private DrivingLicense license;
+	@JoinColumn(name = "license_id") // 1ユーザーにつき1つの免許証
+	private DrivingLicense license; // 運転免許証情報
 
-	private String status;
+	private String status; // ユーザー状態（例：有効、無効）
 
+	// --- Getter & Setter ---
 	public int getId() {
 		return id;
 	}

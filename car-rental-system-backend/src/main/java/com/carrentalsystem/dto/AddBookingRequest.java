@@ -2,24 +2,25 @@ package com.carrentalsystem.dto;
 
 public class AddBookingRequest {
 
-	// *** add booking request ***
-	private String startDate; // local date toString
+	// *** 予約追加リクエスト用フィールド ***
+	private String startDate; // 予約開始日（文字列形式の LocalDate）
 
-	private String endDate;
+	private String endDate; // 予約終了日
 
-	private Integer customerId;
+	private Integer customerId; // 顧客 ID
 
-	private Integer variantId;
-	// *** end booking request ***
+	private Integer variantId; // 車両バリアント ID
+	// *** end ***
 
-	// *** add booking request ***
-	private Integer bookingId; // local date toString
+	// *** 予約更新/管理用フィールド ***
+	private Integer bookingId; // 予約 ID
 
-	private String status;
+	private String status; // 予約ステータス
 
-	private Integer vehicleId;
-	// *** end booking request ***
+	private Integer vehicleId; // 車両 ID
+	// *** end ***
 
+	// --- Getter & Setter ---
 	public String getStartDate() {
 		return startDate;
 	}

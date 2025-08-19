@@ -14,47 +14,45 @@ public class RequestHeaderInterceptor implements HandlerInterceptor {
 
 	private final Logger LOG = LoggerFactory.getLogger(RequestHeaderInterceptor.class);
 
-	// This method is called before the controller's handler method is invoked
-	// You can perform pre-processing here
-	// If you return 'true', the request will continue processing; 'false' will stop
-	// the request
-
+	// コントローラーのハンドラーメソッドが呼ばれる前に実行される
+	// 前処理を行うことができる
+	// true を返すと処理が継続され、false を返すとリクエスト処理が中断される
+	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 
-		LOG.info("preHandle() method invoked");
+		LOG.info("preHandle() メソッドが呼び出されました");
 
-		LOG.info("---------------- Request Start ---------------");
-		LOG.info("Request URL: " + request.getRequestURI());
-		LOG.info("Method Type: " + request.getMethod());
+		LOG.info("---------------- リクエスト開始 ---------------");
+		LOG.info("リクエストURL: " + request.getRequestURI());
+		LOG.info("HTTPメソッド: " + request.getMethod());
 
 		return true;
 	}
 
-	// This method is called after the controller's handler method is invoked but
-	// before rendering the view
-	// You can perform operations after the handler method and before rendering the
-	// view
-
+	// コントローラーの処理が完了した後、ビューのレンダリング前に呼ばれる
+	// ハンドラーメソッド後に追加処理を行うことができる
+	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-		// LOG.info("postHandle() method invoked");
+
+		// LOG.info("postHandle() メソッドが呼び出されました");
 
 		HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
 	}
 
-	// This method is called after the request has been completed
-	// You can perform cleanup or logging here
-
+	// リクエスト処理が完全に終了した後に呼ばれる
+	// クリーンアップ処理やログ記録を行うのに適している
+	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
 
-		LOG.info("afterCompletion() method invoked");
+		LOG.info("afterCompletion() メソッドが呼び出されました");
 
-		LOG.info("Request URL: " + request.getRequestURI());
-		LOG.info("Method Type: " + request.getMethod());
-		LOG.info("Status: " + response.getStatus());
-		LOG.info("---------------- Request End ---------------");
+		LOG.info("リクエストURL: " + request.getRequestURI());
+		LOG.info("HTTPメソッド: " + request.getMethod());
+		LOG.info("レスポンスステータス: " + response.getStatus());
+		LOG.info("---------------- リクエスト終了 ---------------");
 
 		HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
 	}

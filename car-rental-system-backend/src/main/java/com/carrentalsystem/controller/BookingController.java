@@ -20,46 +20,46 @@ import com.carrentalsystem.resource.BookingResource;
 
 import io.swagger.v3.oas.annotations.Operation;
 
-@RestController
-@RequestMapping("api/booking")
-@CrossOrigin(origins = "http://localhost:3000")
+@RestController // REST API を提供するコントローラー
+@RequestMapping("api/booking") // booking 関連の API のルートパス
+@CrossOrigin(origins = "http://localhost:3000") // フロントエンド (React) との通信を許可
 public class BookingController {
 
 	@Autowired
-	private BookingResource bookingResource;
+	private BookingResource bookingResource; // ビジネスロジックを扱うリソースクラス
 
 	@PostMapping("/add")
-	@Operation(summary = "Api to book for customer rent")
+	@Operation(summary = "顧客がレンタル予約を追加する API")
 	public ResponseEntity<CommonApiResponse> addRentBook(@RequestBody AddBookingRequest request) {
 		return bookingResource.addBooking(request);
 	}
 
 	@PutMapping("/update/assign/vehicle")
-	@Operation(summary = "Api to update the booking status and assign vehicle")
+	@Operation(summary = "予約ステータスを更新し、車両を割り当てる API")
 	public ResponseEntity<CommonApiResponse> updateStatusAndAssignVehicle(@RequestBody AddBookingRequest request) {
 		return bookingResource.updateStatusAndAssignVehicle(request);
 	}
 
 	@GetMapping("/fetch/all")
-	@Operation(summary = "Api to fetch all bookings")
+	@Operation(summary = "全ての予約を取得する API")
 	public ResponseEntity<BookingResponse> fetchAllBookings() {
 		return bookingResource.fetchAllBookings();
 	}
 
 	@GetMapping("/fetch/customer-wise")
-	@Operation(summary = "Api to fetch customer bookings")
+	@Operation(summary = "顧客ごとの予約を取得する API")
 	public ResponseEntity<BookingResponse> fetchAllCustomerBookings(@RequestParam("customerId") Integer customerId) {
 		return bookingResource.fetchAllCustomerBookings(customerId);
 	}
 	
 	@DeleteMapping("/cancel")
-	@Operation(summary = "Api to cancel the customer booking")
+	@Operation(summary = "予約をキャンセルする API")
 	public ResponseEntity<CommonApiResponse> cancelbooking(@RequestBody AddBookingRequest request) {
 		return bookingResource.cancelbooking(request);
 	}
 
 	@PutMapping("/customer/payment")
-	@Operation(summary = "Api for customer booking payment")
+	@Operation(summary = "顧客の予約に対する支払い API")
 	public ResponseEntity<CommonApiResponse> customerPaymentForBooking(
 			@RequestBody CustomerBookingPaymentRequest request) {
 		return bookingResource.customerPaymentForBooking(request);

@@ -19,40 +19,40 @@ import com.carrentalsystem.resource.VehicleResource;
 
 import io.swagger.v3.oas.annotations.Operation;
 
-@RestController
-@RequestMapping("api/vehicle")
-@CrossOrigin(origins = "http://localhost:3000")
+@RestController // REST API コントローラー
+@RequestMapping("api/vehicle") // vehicle 関連 API のルート
+@CrossOrigin(origins = "http://localhost:3000") // React フロントエンドからの通信を許可
 public class VehicleController {
 
 	@Autowired
-	private VehicleResource vehicleResource;
+	private VehicleResource vehicleResource; // 車両関連の処理を扱うリソース
 
 	@PostMapping("/add")
-	@Operation(summary = "Api to add vehicle")
+	@Operation(summary = "車両を追加する API")
 	public ResponseEntity<CommonApiResponse> addVehicle(@RequestBody AddVehicleRequest request) {
 		return vehicleResource.addVehicle(request);
 	}
 
 	@GetMapping("/fetch/all")
-	@Operation(summary = "Api to fetch all company")
+	@Operation(summary = "全ての車両を取得する API")
 	public ResponseEntity<VehicleResponse> fetchAllVehicles() {
 		return vehicleResource.fetchAllVehicles();
 	}
 
 	@GetMapping("/fetch/variant-wise")
-	@Operation(summary = "Api to fetch vehicles by variant")
+	@Operation(summary = "バリアント別に車両を取得する API")
 	public ResponseEntity<VehicleResponse> fetchAllVehiclesByVariant(@RequestParam("variantId") Integer variantId) {
 		return vehicleResource.fetchAllVehiclesByVariant(variantId);
 	}
 
 	@PutMapping("/udpate")
-	@Operation(summary = "Api to update vehicle")
+	@Operation(summary = "車両を更新する API")
 	public ResponseEntity<CommonApiResponse> updateVehicle(@RequestBody AddVehicleRequest request) {
 		return vehicleResource.updateVehicle(request);
 	}
 
 	@DeleteMapping("/delete")
-	@Operation(summary = "Api to delete vehicle")
+	@Operation(summary = "車両を削除する API")
 	public ResponseEntity<CommonApiResponse> deleteVehicle(@RequestParam("vehicleId") Integer vehicleId) {
 		return vehicleResource.deleteVehicle(vehicleId);
 	}
